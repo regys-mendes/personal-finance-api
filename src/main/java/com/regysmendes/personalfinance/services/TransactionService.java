@@ -18,17 +18,26 @@ public class TransactionService {
         this.repository = repository;
     }
 
-    public List<Transaction> findAll(){
-        return  repository.findAll();
+    public List<Transaction> findAll() {
+        return repository.findAll();
     }
 
-    public Transaction findById(Long id){
-       Optional<Transaction> obj = repository.findById(id);
-       return obj.orElseThrow(() -> new ObjectNotFoundException("Resource not found. Id " + id));
+    public Transaction findById(Long id) {
+        Optional<Transaction> obj = repository.findById(id);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Resource not found. Id " + id));
     }
 
-    public List<Transaction> findByType(TransactionType type){
+    public List<Transaction> findByType(TransactionType type) {
         return repository.findByTransactionType(type);
     }
 
+    public Transaction insert(Transaction obj) {
+        return repository.save(obj);
+    }
+
+    public void delete(Long id) {
+        findById(id);
+        repository.deleteById(id);
+    }
+    
 }
