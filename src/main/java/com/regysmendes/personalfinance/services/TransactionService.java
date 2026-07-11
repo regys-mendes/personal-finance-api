@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class TransactionService {
 
-    private TransactionRepository repository;
+    private final TransactionRepository repository;
 
     public TransactionService(TransactionRepository repository) {
         this.repository = repository;
