@@ -4,11 +4,10 @@ import com.regysmendes.personalfinance.entities.Transaction;
 import com.regysmendes.personalfinance.entities.TransactionType;
 import com.regysmendes.personalfinance.services.TransactionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -37,6 +36,19 @@ public class TransactionResource {
     public ResponseEntity<List<Transaction>> findByType(@PathVariable TransactionType type){
       List<Transaction> obj = service.findByType(type);
       return ResponseEntity.ok().body(obj);
+    }
+
+    @PostMapping
+    public ResponseEntity<Transaction> insert(@RequestBody Transaction obj){
+      Transaction newObj = service.insert(obj);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newObj.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(newObj);
     }
 
 }
