@@ -51,4 +51,17 @@ public class TransactionResource {
         return ResponseEntity.created(uri).body(newObj);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Transaction> update(@PathVariable Long id, @RequestBody Transaction obj){
+        Transaction newObj = service.update(id, obj);
+
+        return ResponseEntity.ok().body(newObj);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+         service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
