@@ -6,6 +6,7 @@ import com.regysmendes.personalfinance.exceptions.ObjectNotFoundException;
 import com.regysmendes.personalfinance.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,4 +54,23 @@ public class TransactionService {
         entity.setTransactionType(newData.getTransactionType());
     }
 
+    public BigDecimal getBalance() {
+        List<Transaction> despesas = findByType(TransactionType.DESPESA);
+        List<Transaction> receitas = findByType(TransactionType.RECEITA);
+
+        BigDecimal totalIncome = BigDecimal.ZERO;
+
+        for (Transaction t : receitas) {
+            totalIncome = totalIncome.add(t.getValue());
+        }
+
+        BigDecimal totalExpenses = BigDecimal.ZERO;
+
+        for (Transaction t : despesas) {
+            totalExpenses = totalExpenses.add(t.getValue());
+        }
+
+         return  totalIncome.subtract(totalExpenses);
+
+    }
 }
