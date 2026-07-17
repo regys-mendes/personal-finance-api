@@ -70,7 +70,7 @@ public class TransactionService {
             totalExpenses = totalExpenses.add(t.getValue());
         }
 
-         return  totalIncome.subtract(totalExpenses);
+        return totalIncome.subtract(totalExpenses); 
 
     }
 }

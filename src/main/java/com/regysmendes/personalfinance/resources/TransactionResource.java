@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -62,6 +63,12 @@ public class TransactionResource {
     public ResponseEntity<Void> delete(@PathVariable Long id){
          service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/balance")
+    public ResponseEntity<BigDecimal> getBalance(){
+        BigDecimal balance = service.getBalance();
+        return ResponseEntity.ok().body(balance);
     }
 
 }
