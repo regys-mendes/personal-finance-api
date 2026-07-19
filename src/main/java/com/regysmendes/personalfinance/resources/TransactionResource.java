@@ -3,6 +3,7 @@ package com.regysmendes.personalfinance.resources;
 import com.regysmendes.personalfinance.entities.Transaction;
 import com.regysmendes.personalfinance.entities.TransactionType;
 import com.regysmendes.personalfinance.services.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,7 +41,7 @@ public class TransactionResource {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> insert(@RequestBody Transaction obj){
+    public ResponseEntity<Transaction> insert(@Valid @RequestBody Transaction obj){
       Transaction newObj = service.insert(obj);
 
         URI uri = ServletUriComponentsBuilder
@@ -53,7 +54,7 @@ public class TransactionResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Transaction> update(@PathVariable Long id, @RequestBody Transaction obj){
+    public ResponseEntity<Transaction> update(@PathVariable Long id, @Valid @RequestBody Transaction obj){
         Transaction newObj = service.update(id, obj);
 
         return ResponseEntity.ok().body(newObj);

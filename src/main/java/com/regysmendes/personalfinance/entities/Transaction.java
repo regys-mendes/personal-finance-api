@@ -1,6 +1,8 @@
 package com.regysmendes.personalfinance.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,7 +16,9 @@ public class Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String description;
+    @Positive
     private BigDecimal value;
     private LocalDate date;
 
