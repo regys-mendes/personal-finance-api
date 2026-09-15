@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +26,9 @@ public class Transaction implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
+
+    @ManyToOne()
+    private User user;
 
     public Transaction(){
     }
