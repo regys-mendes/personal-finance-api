@@ -1,4 +1,4 @@
-package com.regysmendes.personalfinance.services;
+package com.regysmendes.personalfinance.services.jwt;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
