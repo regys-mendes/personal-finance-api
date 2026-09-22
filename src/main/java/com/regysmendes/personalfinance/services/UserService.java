@@ -1,5 +1,6 @@
 package com.regysmendes.personalfinance.services;
 
+import com.regysmendes.personalfinance.dto.UserDTO;
 import com.regysmendes.personalfinance.entities.User;
 import com.regysmendes.personalfinance.exceptions.ObjectNotFoundException;
 import com.regysmendes.personalfinance.repository.UserRepository;
@@ -24,8 +25,8 @@ public class UserService {
         return user.orElseThrow(() -> new ObjectNotFoundException("User not found. Email" + email));
     }
 
-    public User insert(User dto){
-        User user = new User(dto.getId(), dto.getName(), dto.getEmail(), dto.getPassword());
+    public User insert(UserDTO dto){
+        User user = new User(null, dto.getName(), dto.getEmail(), dto.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
         return user;

@@ -1,5 +1,6 @@
 package com.regysmendes.personalfinance.resources;
 
+import com.regysmendes.personalfinance.dto.UserDTO;
 import com.regysmendes.personalfinance.entities.User;
 import com.regysmendes.personalfinance.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User dto){
+    public ResponseEntity<User> insert(@RequestBody UserDTO dto){
         User user = service.insert(dto);
 
         URI uri = ServletUriComponentsBuilder
