@@ -23,6 +23,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Transaction> transactions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
+
     public User(){
     }
 
