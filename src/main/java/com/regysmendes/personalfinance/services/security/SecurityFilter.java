@@ -1,4 +1,4 @@
-package com.regysmendes.personalfinance.services.jwt;
+package com.regysmendes.personalfinance.services.security;
 
 import com.regysmendes.personalfinance.entities.User;
 import com.regysmendes.personalfinance.services.UserService;

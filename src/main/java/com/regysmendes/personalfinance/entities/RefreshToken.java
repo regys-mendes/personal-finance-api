@@ -53,6 +53,14 @@ public class RefreshToken implements Serializable {
         this.expiration = expiration;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
