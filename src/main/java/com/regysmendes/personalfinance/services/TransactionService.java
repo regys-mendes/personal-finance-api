@@ -2,8 +2,10 @@ package com.regysmendes.personalfinance.services;
 
 import com.regysmendes.personalfinance.entities.Transaction;
 import com.regysmendes.personalfinance.entities.TransactionType;
+import com.regysmendes.personalfinance.entities.User;
 import com.regysmendes.personalfinance.exceptions.ObjectNotFoundException;
 import com.regysmendes.personalfinance.repository.TransactionRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,6 +35,8 @@ public class TransactionService {
     }
 
     public Transaction insert(Transaction obj) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        obj.setUser(user);
         return repository.save(obj);
     }
 

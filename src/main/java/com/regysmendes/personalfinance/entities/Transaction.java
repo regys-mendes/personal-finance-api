@@ -33,12 +33,13 @@ public class Transaction implements Serializable {
     public Transaction(){
     }
 
-    public Transaction(Long id, String description, BigDecimal value, LocalDate date, TransactionType transactionType) {
+    public Transaction(Long id, String description, BigDecimal value, LocalDate date, TransactionType transactionType, User user) {
         this.id = id;
         this.description = description;
         this.value = value;
         this.date = date;
         this.transactionType = transactionType;
+        this.user = user;
     }
 
     public Long getId() {
@@ -79,6 +80,14 @@ public class Transaction implements Serializable {
 
     public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
