@@ -1,5 +1,8 @@
 package com.regysmendes.personalfinance.resources;
 
+import com.regysmendes.personalfinance.dto.transaction.TransactionInsertDTO;
+import com.regysmendes.personalfinance.dto.transaction.TransactionResponseDTO;
+import com.regysmendes.personalfinance.dto.transaction.TransactionUpdateDTO;
 import com.regysmendes.personalfinance.entities.Transaction;
 import com.regysmendes.personalfinance.entities.TransactionType;
 import com.regysmendes.personalfinance.services.TransactionService;
@@ -23,41 +26,40 @@ public class TransactionResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Transaction>> findAll(){
-       List<Transaction> obj = service.findAll();
+    public ResponseEntity<List<TransactionResponseDTO>> findAll(){
+       List<TransactionResponseDTO> obj = service.findAll();
         return ResponseEntity.ok().body(obj);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Transaction> findById(@PathVariable Long id){
-        Transaction obj = service.findById(id);
+    public ResponseEntity<TransactionResponseDTO> findById(@PathVariable Long id){
+        TransactionResponseDTO obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
     @GetMapping(value = "/type/{type}")
-    public ResponseEntity<List<Transaction>> findByType(@PathVariable TransactionType type){
-      List<Transaction> obj = service.findByType(type);
+    public ResponseEntity<List<TransactionResponseDTO>> findByType(@PathVariable TransactionType type){
+      List<TransactionResponseDTO> obj = service.findByType(type);
       return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> insert(@Valid @RequestBody Transaction obj){
-      Transaction newObj = service.insert(obj);
+    public ResponseEntity<TransactionResponseDTO> insert(@Valid @RequestBody TransactionInsertDTO obj){
+      TransactionResponseDTO responseDTO = service.insert(obj);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newObj.getId())
+                .buildAndExpand(responseDTO.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(newObj);
+        return ResponseEntity.created(uri).body(responseDTO);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Transaction> update(@PathVariable Long id, @Valid @RequestBody Transaction obj){
-        Transaction newObj = service.update(id, obj);
-
-        return ResponseEntity.ok().body(newObj);
+    public ResponseEntity<TransactionResponseDTO> update(@PathVariable Long id, @Valid @RequestBody TransactionUpdateDTO obj){
+        TransactionResponseDTO responseDTO = service.update(id, obj);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @DeleteMapping(value = "/{id}")

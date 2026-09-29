@@ -1,5 +1,8 @@
 package com.regysmendes.personalfinance.services;
 
+import com.regysmendes.personalfinance.dto.transaction.TransactionInsertDTO;
+import com.regysmendes.personalfinance.dto.transaction.TransactionResponseDTO;
+import com.regysmendes.personalfinance.dto.transaction.TransactionUpdateDTO;
 import com.regysmendes.personalfinance.entities.Transaction;
 import com.regysmendes.personalfinance.entities.TransactionType;
 import com.regysmendes.personalfinance.entities.User;
@@ -9,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,37 +25,60 @@ public class TransactionService {
         this.repository = repository;
     }
 
-    public List<Transaction> findAll() {
-        return repository.findAll();
+    public List<TransactionResponseDTO> findAll() {
+        List<Transaction> transactions = repository.findAll();
+        List<TransactionResponseDTO> result = new ArrayList<>();
+
+        for (Transaction t : transactions){
+            TransactionResponseDTO responseDTO = new TransactionResponseDTO(t.getId(), t.getDescription(), t.getValue(), t.getDate(), t.getTransactionType());
+            result.add(responseDTO);
+        }
+        return result;
     }
 
-    public Transaction findById(Long id) {
+    public Transaction findByIdentity(Long id) {
         Optional<Transaction> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Resource not found. Id " + id));
     }
 
-    public List<Transaction> findByType(TransactionType type) {
-        return repository.findByTransactionType(type);
+    public TransactionResponseDTO findById(Long id){
+        Transaction transaction = findByIdentity(id);
+        return new TransactionResponseDTO(transaction.getId(), transaction.getDescription(), transaction.getValue(), transaction.getDate(), transaction.getTransactionType());
     }
 
-    public Transaction insert(Transaction obj) {
+    public List<TransactionResponseDTO> findByType(TransactionType type) {
+        List<Transaction> transaction = repository.findByTransactionType(type);
+        List<TransactionResponseDTO> result = new ArrayList<>();
+
+        for (Transaction t : transaction){
+            TransactionResponseDTO responseDTO = new TransactionResponseDTO(t.getId(), t.getDescription(), t.getValue(), t.getDate(), t.getTransactionType());
+            result.add(responseDTO);
+        }
+        return result;
+    }
+
+    public TransactionResponseDTO insert(TransactionInsertDTO dto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        obj.setUser(user);
-        return repository.save(obj);
+
+        Transaction transaction = new Transaction(null, dto.getDescription(), dto.getValue(), dto.getDate(), dto.getTransactionType(), user);
+
+        repository.save(transaction);
+        return new TransactionResponseDTO(transaction.getId(), transaction.getDescription(), transaction.getValue(), transaction.getDate(), transaction.getTransactionType());
     }
 
     public void delete(Long id) {
-        findById(id);
+        findByIdentity(id);
         repository.deleteById(id);
     }
 
-    public Transaction update(Long id, Transaction obj) {
-        Transaction entity = findById(id);
+    public TransactionResponseDTO update(Long id, TransactionUpdateDTO obj) {
+        Transaction entity = findByIdentity(id);
         updateTransaction(entity, obj);
-        return repository.save(entity);
+        repository.save(entity);
+        return new TransactionResponseDTO(entity.getId(), entity.getDescription(), entity.getValue(), entity.getDate(), entity.getTransactionType());
     }
 
-    public void updateTransaction(Transaction entity, Transaction newData) {
+    public void updateTransaction(Transaction entity, TransactionUpdateDTO newData) {
         entity.setDescription(newData.getDescription());
         entity.setDate(newData.getDate());
         entity.setValue(newData.getValue());
@@ -59,8 +86,8 @@ public class TransactionService {
     }
 
     public BigDecimal getBalance() {
-        List<Transaction> despesas = findByType(TransactionType.DESPESA);
-        List<Transaction> receitas = findByType(TransactionType.RECEITA);
+        List<Transaction> despesas = repository.findByTransactionType(TransactionType.DESPESA);
+        List<Transaction> receitas = repository.findByTransactionType(TransactionType.RECEITA);
 
         BigDecimal totalIncome = BigDecimal.ZERO;
 

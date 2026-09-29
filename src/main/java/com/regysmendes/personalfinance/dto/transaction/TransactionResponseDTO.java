@@ -1,4 +1,4 @@
-    package com.regysmendes.personalfinance.dto;
+    package com.regysmendes.personalfinance.dto.transaction;
 
     import com.regysmendes.personalfinance.entities.TransactionType;
 
