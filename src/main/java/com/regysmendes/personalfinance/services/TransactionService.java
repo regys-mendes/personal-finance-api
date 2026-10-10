@@ -1,5 +1,6 @@
 package com.regysmendes.personalfinance.services;
 
+import com.regysmendes.personalfinance.dto.UserDTO;
 import com.regysmendes.personalfinance.dto.transaction.TransactionInsertDTO;
 import com.regysmendes.personalfinance.dto.transaction.TransactionResponseDTO;
 import com.regysmendes.personalfinance.dto.transaction.TransactionUpdateDTO;
@@ -26,7 +27,8 @@ public class TransactionService {
     }
 
     public List<TransactionResponseDTO> findAll() {
-        List<Transaction> transactions = repository.findAll();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Transaction> transactions = repository.findByUserId(user.getId());
         List<TransactionResponseDTO> result = new ArrayList<>();
 
         for (Transaction t : transactions){
