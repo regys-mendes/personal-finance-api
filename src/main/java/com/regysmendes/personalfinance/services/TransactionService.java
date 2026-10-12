@@ -89,8 +89,9 @@ public class TransactionService {
     }
 
     public BigDecimal getBalance() {
-        List<Transaction> despesas = repository.findByTransactionType(TransactionType.DESPESA);
-        List<Transaction> receitas = repository.findByTransactionType(TransactionType.RECEITA);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Transaction> despesas = repository.findByTransactionTypeAndUserId(TransactionType.DESPESA, user.getId());
+        List<Transaction> receitas = repository.findByTransactionTypeAndUserId(TransactionType.RECEITA, user.getId());
 
         BigDecimal totalIncome = BigDecimal.ZERO;
 
