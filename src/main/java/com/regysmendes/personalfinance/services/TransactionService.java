@@ -49,7 +49,8 @@ public class TransactionService {
     }
 
     public List<TransactionResponseDTO> findByType(TransactionType type) {
-        List<Transaction> transaction = repository.findByTransactionType(type);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Transaction> transaction = repository.findByTransactionTypeAndUserId(type, user.getId());
         List<TransactionResponseDTO> result = new ArrayList<>();
 
         for (Transaction t : transaction){

@@ -1,6 +1,5 @@
 package com.regysmendes.personalfinance.services;
 
-import com.regysmendes.personalfinance.dto.UserDTO;
 import com.regysmendes.personalfinance.entities.RefreshToken;
 import com.regysmendes.personalfinance.entities.User;
 import com.regysmendes.personalfinance.exceptions.ObjectNotFoundException;
