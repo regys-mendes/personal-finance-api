@@ -2,7 +2,7 @@ package com.regysmendes.personalfinance.services;
 
 import com.regysmendes.personalfinance.dto.UserDTO;
 import com.regysmendes.personalfinance.entities.User;
-import com.regysmendes.personalfinance.exceptions.ObjectNotFoundException;
+import com.regysmendes.personalfinance.exceptions.ForbiddenException;
 import com.regysmendes.personalfinance.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserService {
 
     public User findByEmail(String email){
         Optional<User> user = repository.findByEmail(email);
-        return user.orElseThrow(() -> new ObjectNotFoundException("User not found. Email" + email));
+        return user.orElseThrow(() -> new ForbiddenException("Access denied!, user not found. Email" + email));
     }
 
     public User insert(UserDTO dto){

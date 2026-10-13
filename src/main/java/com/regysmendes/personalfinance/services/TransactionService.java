@@ -1,12 +1,12 @@
 package com.regysmendes.personalfinance.services;
 
-import com.regysmendes.personalfinance.dto.UserDTO;
 import com.regysmendes.personalfinance.dto.transaction.TransactionInsertDTO;
 import com.regysmendes.personalfinance.dto.transaction.TransactionResponseDTO;
 import com.regysmendes.personalfinance.dto.transaction.TransactionUpdateDTO;
 import com.regysmendes.personalfinance.entities.Transaction;
 import com.regysmendes.personalfinance.entities.TransactionType;
 import com.regysmendes.personalfinance.entities.User;
+import com.regysmendes.personalfinance.exceptions.ForbiddenException;
 import com.regysmendes.personalfinance.exceptions.ObjectNotFoundException;
 import com.regysmendes.personalfinance.repository.TransactionRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +31,7 @@ public class TransactionService {
         List<Transaction> transactions = repository.findByUserId(user.getId());
         List<TransactionResponseDTO> result = new ArrayList<>();
 
-        for (Transaction t : transactions){
+        for (Transaction t : transactions) {
             TransactionResponseDTO responseDTO = new TransactionResponseDTO(t.getId(), t.getDescription(), t.getValue(), t.getDate(), t.getTransactionType());
             result.add(responseDTO);
         }
@@ -40,10 +40,16 @@ public class TransactionService {
 
     public Transaction findByIdentity(Long id) {
         Optional<Transaction> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Resource not found. Id " + id));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Transaction transaction = obj.orElseThrow(() -> new ObjectNotFoundException("Id not found: " + id));
+
+        if (transaction.getUser().getId().equals(user.getId())){
+            return transaction;
+        }
+        else throw new ForbiddenException("Access Denied!");
     }
 
-    public TransactionResponseDTO findById(Long id){
+    public TransactionResponseDTO findById(Long id) {
         Transaction transaction = findByIdentity(id);
         return new TransactionResponseDTO(transaction.getId(), transaction.getDescription(), transaction.getValue(), transaction.getDate(), transaction.getTransactionType());
     }
@@ -53,7 +59,7 @@ public class TransactionService {
         List<Transaction> transaction = repository.findByTransactionTypeAndUserId(type, user.getId());
         List<TransactionResponseDTO> result = new ArrayList<>();
 
-        for (Transaction t : transaction){
+        for (Transaction t : transaction) {
             TransactionResponseDTO responseDTO = new TransactionResponseDTO(t.getId(), t.getDescription(), t.getValue(), t.getDate(), t.getTransactionType());
             result.add(responseDTO);
         }
@@ -70,7 +76,7 @@ public class TransactionService {
     }
 
     public void delete(Long id) {
-        findByIdentity(id);
+        findById(id);
         repository.deleteById(id);
     }
 
@@ -105,7 +111,7 @@ public class TransactionService {
             totalExpenses = totalExpenses.add(t.getValue());
         }
 
-        return totalIncome.subtract(totalExpenses); 
+        return totalIncome.subtract(totalExpenses);
 
     }
 }
