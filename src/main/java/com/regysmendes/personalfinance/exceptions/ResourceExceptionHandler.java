@@ -13,13 +13,26 @@ import java.util.Date;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<StandardError> accessDenied(ForbiddenException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = new StandardError
+                (new Date(),
+                        status.value(),
+                        "Forbidden ",
+                        e.getMessage(),
+                        request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
+
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardError err = new StandardError
                 (new Date(),
                         status.value(),
-                        "Object not found ",
+                        "Object Not Found",
                         e.getMessage(),
                         request.getRequestURI());
 
